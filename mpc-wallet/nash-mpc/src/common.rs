@@ -4,15 +4,15 @@
 
 #[cfg(feature = "secp256k1")]
 use crate::curves::secp256_k1::{Secp256k1Point, Secp256k1Scalar};
-#[cfg(feature = "k256")]
+#[cfg(feature = "rustcrypto")]
 use crate::curves::secp256_k1_rust::{Secp256k1Point, Secp256k1Scalar};
 use crate::curves::secp256_r1::{Secp256r1Point, Secp256r1Scalar};
 use crate::curves::traits::{ECPoint, ECScalar};
-#[cfg(feature = "k256")]
+#[cfg(feature = "rustcrypto")]
 use k256::elliptic_curve::sec1::{
     FromEncodedPoint as FromEncodedPoint_k256, ToEncodedPoint as ToEncodedPoint_k256,
 };
-#[cfg(feature = "k256")]
+#[cfg(feature = "rustcrypto")]
 use k256::AffinePoint as AffinePoint_k256;
 use lazy_static::__Deref;
 #[cfg(feature = "num_bigint")]
@@ -203,13 +203,11 @@ pub fn verify(r: &BigInt, s: &BigInt, pubkey_str: &str, msg_hash: &BigInt, curve
 fn publickey_from_secretkey_r1(pk: &Secp256k1Point) -> Result<String, ()> {
     Ok("0".to_string() + &BigInt::from_bytes(&pk.ge.serialize_uncompressed()).to_hex())
 }
-#[cfg(feature = "k256")]
+#[cfg(feature = "rustcrypto")]
 fn publickey_from_secretkey_r1(pk: &Secp256k1Point) -> Result<String, ()> {
     // unwrap() is safe because pk has been validated in publickey_from_secretkey()
     let tmp = AffinePoint_k256::from_encoded_point(&pk.ge.to_encoded_point(false)).unwrap();
-    Ok("0".to_string()
-        + &BigInt::from_bytes(&tmp.to_encoded_point(false).as_bytes())
-            .to_hex())
+    Ok("0".to_string() + &BigInt::from_bytes(&tmp.to_encoded_point(false).as_bytes()).to_hex())
 }
 
 /// derive public key from secret key, in uncompressed format as expected by ME
@@ -330,7 +328,7 @@ mod tests {
     };
     #[cfg(feature = "secp256k1")]
     use crate::curves::secp256_k1::Secp256k1Point;
-    #[cfg(feature = "k256")]
+    #[cfg(feature = "rustcrypto")]
     use crate::curves::secp256_k1_rust::Secp256k1Point;
     use crate::curves::secp256_r1::Secp256r1Point;
     use crate::curves::traits::ECPoint;

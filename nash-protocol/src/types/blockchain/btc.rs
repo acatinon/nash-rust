@@ -4,7 +4,7 @@ use crate::errors::{ProtocolError, Result};
 
 #[cfg(feature = "secp256k1")]
 use nash_mpc::curves::secp256_k1::Secp256k1Point;
-#[cfg(feature = "k256")]
+#[cfg(feature = "rustcrypto")]
 use nash_mpc::curves::secp256_k1_rust::Secp256k1Point;
 
 use nash_mpc::curves::traits::ECPoint;

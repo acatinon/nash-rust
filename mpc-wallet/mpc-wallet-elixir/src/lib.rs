@@ -7,7 +7,7 @@ extern crate rustler;
 
 #[cfg(feature = "secp256k1")]
 use nash_mpc::curves::secp256_k1::{Secp256k1Point, Secp256k1Scalar};
-#[cfg(feature = "k256")]
+#[cfg(feature = "rustcrypto")]
 use nash_mpc::curves::secp256_k1_rust::{Secp256k1Point, Secp256k1Scalar};
 use nash_mpc::curves::secp256_r1::{Secp256r1Point, Secp256r1Scalar};
 use nash_mpc::paillier_common::{DecryptionKey, EncryptionKey};

@@ -5,7 +5,7 @@ use crate::graphql::dh_fill_pool;
 use crate::types::Blockchain;
 #[cfg(feature = "secp256k1")]
 use nash_mpc::curves::secp256_k1::Secp256k1Point;
-#[cfg(feature = "k256")]
+#[cfg(feature = "rustcrypto")]
 use nash_mpc::curves::secp256_k1_rust::Secp256k1Point;
 use nash_mpc::curves::secp256_r1::Secp256r1Point;
 use nash_mpc::curves::traits::ECPoint;
@@ -93,22 +93,14 @@ pub async fn fill_pool(
         DhFillPoolRequest::Bitcoin(request) | DhFillPoolRequest::Ethereum(request) => {
             let k1_secrets = request.secrets.clone();
             let k1_server_publics = server_publics.publics_for_k1()?;
-            nash_mpc::client::fill_rpool_secp256k1(
-                k1_secrets,
-                &k1_server_publics,
-                paillier_pk,
-            )
-            .map_err(|_| ProtocolError("Error filling k1 pool"))?;
+            nash_mpc::client::fill_rpool_secp256k1(k1_secrets, &k1_server_publics, paillier_pk)
+                .map_err(|_| ProtocolError("Error filling k1 pool"))?;
         }
         DhFillPoolRequest::NEO(request) => {
             let r1_secrets = request.secrets.clone();
             let r1_server_publics = server_publics.publics_for_r1()?;
-            nash_mpc::client::fill_rpool_secp256r1(
-                r1_secrets,
-                &r1_server_publics,
-                paillier_pk,
-            )
-            .map_err(|_| ProtocolError("Error filling r1 pool"))?;
+            nash_mpc::client::fill_rpool_secp256r1(r1_secrets, &r1_server_publics, paillier_pk)
+                .map_err(|_| ProtocolError("Error filling r1 pool"))?;
         }
     }
     Ok(())

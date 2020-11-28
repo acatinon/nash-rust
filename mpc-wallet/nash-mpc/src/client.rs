@@ -7,7 +7,7 @@ use crate::common::{
 };
 #[cfg(feature = "secp256k1")]
 use crate::curves::secp256_k1::{Secp256k1Point, Secp256k1Scalar};
-#[cfg(feature = "k256")]
+#[cfg(feature = "rustcrypto")]
 use crate::curves::secp256_k1_rust::{Secp256k1Point, Secp256k1Scalar};
 use crate::curves::secp256_r1::{Secp256r1Point, Secp256r1Scalar};
 use crate::curves::traits::{ECPoint, ECScalar};
@@ -423,7 +423,7 @@ mod tests {
     use crate::common::{CorrectKeyProof, Curve};
     #[cfg(feature = "secp256k1")]
     use crate::curves::secp256_k1::{Secp256k1Point, Secp256k1Scalar};
-    #[cfg(feature = "k256")]
+    #[cfg(feature = "rustcrypto")]
     use crate::curves::secp256_k1_rust::{Secp256k1Point, Secp256k1Scalar};
     use crate::curves::secp256_r1::{Secp256r1Point, Secp256r1Scalar};
     use crate::curves::traits::ECScalar;

@@ -7,26 +7,25 @@ use crate::types::PublicKey;
 use crate::utils::{der_encode_sig, hash_message};
 use nash_mpc::client::APIchildkey;
 use nash_mpc::common::Curve;
-#[cfg(feature = "k256")]
+#[cfg(feature = "rustcrypto")]
 use nash_mpc::curves::secp256_k1_rust::Secp256k1Scalar;
-#[cfg(feature = "k256")]
+#[cfg(feature = "rustcrypto")]
 use nash_mpc::curves::traits::ECScalar;
 use nash_mpc::paillier_common;
 use nash_mpc::rust_bigint::BigInt;
 
-#[cfg(feature = "k256")]
+#[cfg(feature = "rustcrypto")]
 use k256::ecdsa::signature::Signer as k256_Signer;
-#[cfg(feature = "k256")]
+#[cfg(feature = "rustcrypto")]
 use k256::ecdsa::{Signature, SigningKey};
+#[cfg(feature = "secp256k1")]
+use nash_mpc::curves::secp256_k1::get_context;
+#[cfg(feature = "secp256k1")]
+use rust_bigint::traits::Converter;
 #[cfg(feature = "secp256k1")]
 use secp256k1::constants::{COMPACT_SIGNATURE_SIZE, MESSAGE_SIZE, SECRET_KEY_SIZE};
 #[cfg(feature = "secp256k1")]
 use secp256k1::{Message, SecretKey};
-#[cfg(feature = "secp256k1")]
-use rust_bigint::traits::Converter;
-#[cfg(feature = "secp256k1")]
-use nash_mpc::curves::secp256_k1::get_context;
-
 
 pub fn chain_path(chain: Blockchain) -> &'static str {
     match chain {
@@ -65,7 +64,8 @@ impl Signer {
     /// Either implemented with k256 from rustcrypto (pure rust) or secp256k1 (better performance)
     #[cfg(feature = "rustcrypto")]
     pub fn sign_canonical_string(&self, request: &str) -> RequestPayloadSignature {
-        let signing_key: Secp256k1Scalar = ECScalar::from(&self.api_keys.keys.payload_signing_key).expect("Invalid key");
+        let signing_key: Secp256k1Scalar =
+            ECScalar::from(&self.api_keys.keys.payload_signing_key).expect("Invalid key");
         let key = SigningKey::new(&signing_key.to_vec()).expect("invalid secret key");
         let sig_pre: Signature = key.try_sign(request.as_bytes()).expect("signing failed");
         let sig = sig_pre.to_asn1();

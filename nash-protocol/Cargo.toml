@@ -10,7 +10,7 @@ description = "state management and cryptography for interacting with nash excha
 
 [features]
 default = ["rust_gmp", "rustcrypto"]
-rustcrypto = ["k256", "nash-mpc/k256"]
+rustcrypto = ["k256", "nash-mpc/rustcrypto"]
 libsecp256k1 = ["nash-mpc/secp256k1", "secp256k1"]
 rust_gmp = ["nash-mpc/rust_gmp"]
 num_bigint = ["nash-mpc/num_bigint"]
